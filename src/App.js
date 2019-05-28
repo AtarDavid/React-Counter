@@ -12,36 +12,24 @@ class App extends Component {
     }
   }
 
-  Reset = () => {
-    this.setState(
-      { count: 0 }
-    )
-  }
-
-  IncrementItem = () => {
-    //WRONG! ANTIPATTERN!
-    //this.setState({count: this.state.count + 1})
-    //CORRECT prevState func
-    this.setState(prevState => {
-      console.log("This is prev", prevState)
-      return { count: prevState.count + 1 }
-    })
-  }
-
-  DecreaseItem = () => {
-    this.setState(
-      prevState => {
-        console.log("This is prev", prevState)
-        return { count: prevState.count - 1 }
-      }
-    )
-  }
-
-  ToggleClick = () => {
-    this.setState(
-      prevState => {
-        return { show: !prevState.show }
+  updateCounter = (type) => {
+    switch (type) {
+      case 'INCREMENT': return this.setState(prevState => {
+        return { count: prevState.count + 1 }
       });
+      case 'DECREMENT': return this.setState(
+        prevState => {
+          return { count: prevState.count - 1 }
+        });
+      case 'TOGGLE': return this.setState(
+        prevState => {
+          return { show: !prevState.show }
+        });
+      case 'RESET': return this.setState(
+        { count: 0 }
+      );
+      default: return this.state
+    }
   }
 
   render() {
@@ -53,12 +41,12 @@ class App extends Component {
         </header>
         <div className="App-intro">
           <h2>Counter and Toggle - Update</h2>
-          <button onClick={this.IncrementItem}>Click to increment by 1</button>
-          <button onClick={this.DecreaseItem}>Click to decrease by 1</button>
-          <button onClick={this.ToggleClick}>
+          <button onClick={() => { this.updateCounter('INCREMENT') }}>Click to increment by 1</button>
+          <button onClick={() => { this.updateCounter('DECREMENT') }}>Click to decrease by 1</button>
+          <button onClick={() => { this.updateCounter('TOGGLE') }}>
             {this.state.show ? 'Hide number' : 'Show number'}
           </button>
-          <button onClick={this.Reset}>Reset</button>
+          <button onClick={() => { this.updateCounter('RESET') }}>Reset</button>
           {this.state.show ? <h2>{this.state.count}</h2> : ''}
         </div>
       </div>
